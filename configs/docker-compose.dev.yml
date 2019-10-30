@@ -1,0 +1,42 @@
+version: '3.4'
+services:
+  text2lex_postgres:
+    env_file: .dev.env
+    network_mode: host
+    ports:
+      - '5432:5432'
+
+  text2lex_redis:
+    env_file: .dev.env
+    network_mode: host
+    ports:
+      - '6379:6379'
+    command:
+      ['sh', '-c', 'redis-server --requirepass $$REDIS_PASS --appendonly yes']
+
+  text2lex_api:
+    env_file: .dev.env
+    network_mode: host
+    ports:
+      - '3031:3031'
+    command: gunicorn src.run:app --timeout 60 --reload --bind 0.0.0.0:3031
+
+  text2lex_nlp:
+    env_file: .dev.env
+    network_mode: host
+    command: tail -f /dev/null
+
+  text2lex_scheduler:
+    network_mode: host
+    env_file: .dev.env
+    command: ./entrypoint.sh
+
+  text2lex_frontend:
+    env_file: .dev.env
+    build:
+      context: ../frontend
+      target: dev-stage
+    network_mode: host
+    ports:
+      - '4041:4041'
+    command: npm start

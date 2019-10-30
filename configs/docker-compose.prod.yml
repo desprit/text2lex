@@ -1,0 +1,41 @@
+version: '3.4'
+services:
+  text2lex_postgres:
+    env_file: .prod.env
+    ports:
+      - '5432'
+
+  text2lex_redis:
+    env_file: .prod.env
+    ports:
+      - '6379'
+    command:
+      ['sh', '-c', 'redis-server --requirepass $$REDIS_PASS --appendonly yes']
+
+  text2lex_api:
+    env_file: .prod.env
+    ports:
+      - '3031'
+
+  text2lex_nlp:
+    env_file: .prod.env
+
+  text2lex_scheduler:
+    env_file: .prod.env
+    command:
+      [
+        'sh',
+        '-c',
+        'rqscheduler --host $$REDIS_HOST --port $$REDIS_PORT --password $$REDIS_PASS --interval 30',
+      ]
+
+  text2lex_frontend:
+    env_file: .dev.env
+    build:
+      context: ../frontend
+      target: deploy-stage
+    volumes:
+      - '/certs:/certs'
+    ports:
+      - '80:80'
+      - '443:443'

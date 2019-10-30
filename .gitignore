@@ -1,0 +1,42 @@
+venv/
+# local env files
+.env.local
+.env.*.local
+.prod.env
+.env
+
+*.swp
+*.swo
+*.pyc
+.sass-cache/*
+*.egg-info/*
+.mypy_cache
+
+.npm
+frontend/node_modules/
+__pycache__
+.coverage
+.pytest_cache
+.ackrc
+
+.DS_Store
+frontend/dist
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+npm-debug.log*
+nohup.out
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+.vscode/

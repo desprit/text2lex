@@ -1,0 +1,21 @@
+[run]
+branch = True
+
+[report]
+omit=
+  pragma: no cover
+  */venv/*
+  */__pycache__/*
+  */__init__.py
+  */config.py
+  */tests/*
+  *_tests.py
+exclude_lines =
+  if __name__ == .__main__.:
+  except ModuleNotFoundError:
+
+[xml]
+output=cov.xml
+
+[html]
+directory=htmlcov

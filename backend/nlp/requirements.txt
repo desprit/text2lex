@@ -1,0 +1,8 @@
+flask
+flask_cors
+mixer
+psycopg2
+redis
+rq
+rq-scheduler
+sqlalchemy
