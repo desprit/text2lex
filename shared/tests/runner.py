@@ -3,16 +3,12 @@ Run all tests.
 """
 import unittest
 
-from app_tests import AppTests
-from utils.utils_tests import UtilsTests
-from database.models_tests import ModelsTests
-from database.queries_tests import QueriesTests
-from database.db_utils_tests import DbUtilsTests
-from views.access.access_tests import AccessTests
-from views.scraper.scraper_tests import ScraperTests
-from views.replacement.replacement_tests import ReplacementTests
+from shared.utils.utils_tests import UtilsTests
+from shared.database.models_tests import ModelsTests
+from shared.database.queries_tests import QueriesTests
+from shared.database.db_utils_tests import DbUtilsTests
 from views.authentication.authentication_tests import AuthenticationTests
-from betsscrapers.pipelines_tests import PipelinesTests
+from views.upload.upload_tests import UploadTests
 
 
 def run_tests():
@@ -25,13 +21,9 @@ def run_tests():
         DbUtilsTests,
         ModelsTests,
         QueriesTests,
-        AppTests,
         UtilsTests,
         AuthenticationTests,
-        AccessTests,
-        ReplacementTests,
-        ScraperTests,
-        PipelinesTests,
+        UploadTests,
     ]
     for testcase in testcases:
         suites.append(unittest.TestLoader().loadTestsFromTestCase(testcase))

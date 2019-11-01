@@ -9,12 +9,12 @@ RUN apk update \
   && sed -i -e "s/bin\/ash/bin\/sh/" /etc/passwd
 
 RUN npm install -g @angular/cli
-RUN mkdir -p /opt/text2lex/ui
-WORKDIR /opt/text2lex/ui
-ADD package.json /opt/text2lex/ui/
+RUN mkdir -p /opt/text2lex/frontend
+WORKDIR /opt/text2lex/frontend
+ADD package.json /opt/text2lex/frontend/
 RUN npm cache clean --force
 RUN npm install
-ADD . /opt/text2lex/ui
+ADD . /opt/text2lex/frontend
 
 # Build
 FROM node:alpine as build-stage
@@ -24,7 +24,7 @@ RUN apk add --update \
   bash \
   && rm /var/cache/apk/*
 RUN npm install -g @angular/cli
-WORKDIR /opt/text2lex/ui
+WORKDIR /opt/text2lex/frontend
 COPY package*.json ./
 RUN npm install
 COPY . .
@@ -39,5 +39,5 @@ RUN apk add --update \
   && rm /var/cache/apk/*
 COPY ./nginx/entrypoint.sh /entrypoint.sh
 COPY ./nginx/text2lex.conf /etc/nginx/conf.d/text2lex.conf
-COPY --from=build-stage /opt/text2lex/ui/dist/ui /usr/share/nginx/html
+COPY --from=build-stage /opt/text2lex/frontend/dist/frontend /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]

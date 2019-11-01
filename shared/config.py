@@ -9,6 +9,8 @@ DEBUG = os.environ.get("DEBUG") in ["True", "1", 1, True]
 API_SECRET = "c2bf3686-a81e-496b-b75e-7ae79f9fa311"
 
 API_PORT = os.environ.get("API_PORT", 3031)
+ALLOWED_EXTENSIONS = set(["txt"])
+UPLOAD_FOLDER = "/tmp"
 
 # PostgreSQL credentials
 POSTGRES_USER = os.environ.get("POSTGRES_USER", "text2lex")

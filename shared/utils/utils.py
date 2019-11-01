@@ -7,6 +7,7 @@ from typing import Dict, List, Tuple, Any
 from werkzeug.security import generate_password_hash
 
 from shared.database import models, db_utils
+from shared.config import ALLOWED_EXTENSIONS
 
 
 def create_user(user: Dict[str, Any], session=None) -> Tuple[bool, str]:
@@ -73,3 +74,11 @@ def dt_to_milliseconds_str(dt: datetime.datetime) -> str:
     dt_as_str = str(int(dt.strftime("%s")) * 1000)
 
     return dt_as_str
+
+
+def is_allowed_file(filename: str) -> bool:
+    """
+    Return True when given filename is of correct extension.
+    """
+
+    return "." in filename and filename.rsplit(".", 1)[1] in ALLOWED_EXTENSIONS

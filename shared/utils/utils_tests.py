@@ -6,6 +6,7 @@ import datetime
 from shared.utils import utils
 from shared.database import models, db_utils
 from shared.tests.base import TestsBaseClass
+from shared.config import ALLOWED_EXTENSIONS
 
 
 class UtilsTests(TestsBaseClass):
@@ -99,3 +100,31 @@ class UtilsTests(TestsBaseClass):
         success, error = utils.create_user(user, session=self.session)
         self.assertFalse(success)
         self.assertTrue(error)
+
+    def test_09_is_allowed_file_no_ext(self):
+        """
+        Should return False when filename doesn't have extension.
+        """
+
+        filename = "somename"
+        is_allowed = utils.is_allowed_file(filename)
+        self.assertFalse(is_allowed)
+
+    def test_10_is_allowed_file_wrong_ext(self):
+        """
+        Should return False when extension is wrong.
+        """
+
+        filename = "somename.pdf"
+        is_allowed = utils.is_allowed_file(filename)
+        self.assertFalse(is_allowed)
+
+    def test_11_is_allowed_file_correct_ext(self):
+        """
+        Should return False when extension is wrong.
+        """
+
+        for ext in list(ALLOWED_EXTENSIONS):
+            filename = f"somename.{ext}"
+            is_allowed = utils.is_allowed_file(filename)
+            self.assertTrue(is_allowed)

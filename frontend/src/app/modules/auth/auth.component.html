@@ -1,0 +1,45 @@
+<div class="auth" fxLayoutAlign="center center">
+  <p-card class="ui-g-4">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12">
+        <div class="ui-inputgroup">
+          <span class="ui-inputgroup-addon"
+            ><i class="pi pi-user" style="line-height: 1.25;"></i
+          ></span>
+          <input
+            (keyup.enter)="onLoginClick()"
+            name="username"
+            type="text"
+            pInputText
+            placeholder="Username"
+            [formControl]="usernameFormControl"
+          />
+        </div>
+      </div>
+
+      <div class="ui-g-12">
+        <div class="ui-inputgroup">
+          <span class="ui-inputgroup-addon">
+            <i class="pi pi-key" style="line-height: 1.25;"></i>
+          </span>
+          <input
+            (keyup.enter)="onLoginClick()"
+            name="password"
+            type="password"
+            pInputText
+            placeholder="Password"
+            [formControl]="passwordFormControl"
+          />
+        </div>
+      </div>
+
+      <div class="ui-g-12">
+        <p-button
+          [disabled]="!valid"
+          (click)="onLoginClick()"
+          label="Login"
+        ></p-button>
+      </div>
+    </div>
+  </p-card>
+</div>

@@ -1,23 +1,5 @@
 #!/bin/bash
 
-: '
-Supported arguments (default: `dev`):
--------------------------------------
-  clean    - clean dungling docker images and stopped containers;
-  trunc    - reset all log files for the project;
-  log      - tails al project log files;
-  stop     - stop containers ran by docker-compose;
-  status   - check if all containers are running;
-  dev      - stop all containers, clean, run docker-compose.dev;
-  prod     - stop all containers, clean, run docker-compose.prod;
-  frontend - connect to UI container;
-  api      - connect to API container;
-  nlp      - connect to NLP container;
-  redis    - connect to Redis container;
-  postgres - connect to PostgreSQL container;
--------------------------------------------------------------------
-'
-
 # Terminal colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -164,7 +146,7 @@ recreateDb() {
 
 test() {
   coverage erase
-  coverage run -m unittest shared/tests/runner.py
+  PYTHONPATH=$PYTHONPATH:/home/desprit/projects/text2lex/backend/api/src:/home/desprit/projects/text2lex coverage run -m unittest shared/tests/runner.py
   coverage html --rcfile .coveragerc -d htmlcov
 }
 

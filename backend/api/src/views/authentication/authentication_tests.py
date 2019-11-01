@@ -1,6 +1,8 @@
 """
 Tests for app.py
 """
+import json
+
 from shared.utils import utils
 from shared.tests.base import TestsBaseClass
 
@@ -12,13 +14,12 @@ class AuthenticationTests(TestsBaseClass):
 
     def test_login_incorrect_credentials(self):
         """
-        Should return login page with flash message.
+        Should return an error.
         """
 
-        response = self.app.post(
-            "/api/login", data={"username": "admin", "password": "test"}
-        )
-        error_msg = "Please check your login details and try again."
+        user = {"username": "admin", "password": "test"}
+        response = self.app.post("/v1/api/login", json=user)
+        error_msg = "Please check your login details and try again"
         self.assertTrue(
             error_msg in response.data.decode("utf8"),
             "Didn't trigger error on incorrect credentials",
@@ -26,28 +27,26 @@ class AuthenticationTests(TestsBaseClass):
 
     def test_login_correct_credentials(self):
         """
-        Should return scrapers page.
+        Should return success.
         """
 
-        user = {"username": "test", "password": "test"}
+        user = {"username": "admin", "password": "admin"}
         utils.create_user(user, session=self.session)
-        response = self.app.post("/api/login", data=user, follow_redirects=True)
-        self.assertTrue(
-            "scrapers-section" in response.data.decode("utf8"),
-            "Didn't render scrapers page",
-        )
+        response = self.app.post("/v1/api/login", json=user, follow_redirects=True)
+        data = json.loads(response.data.decode("utf8"))
+        self.assertTrue(data["success"])
 
     def test_logout(self):
         """
-        Should return to login page.
+        Should remove info from session object.
         """
 
         with self.app.session_transaction() as sess:
-            sess["user_id"] = "test"
-        response = self.app.get("/api/logout", follow_redirects=True)
+            sess["is_admin"] = True
+            sess["username"] = "test"
+        response = self.app.get("/v1/api/logout", follow_redirects=True)
         with self.app.session_transaction() as sess:
-            self.assertTrue("user_id" not in sess)
-        self.assertTrue(
-            'form class="login-form"' in response.data.decode("utf8"),
-            "Didn't render scrapers page",
-        )
+            self.assertTrue("is_admin" not in sess)
+            self.assertTrue("username" not in sess)
+        data = json.loads(response.data.decode("utf8"))
+        self.assertTrue(data["success"])

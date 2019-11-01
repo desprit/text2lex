@@ -8,7 +8,7 @@ from typing import Dict, Tuple, Any
 from mixer.backend.sqlalchemy import Mixer
 
 from app import app
-from database import db_utils, models
+from shared.database import db_utils, models
 
 
 app.config["TESTING"] = True
@@ -46,8 +46,6 @@ class TestsBaseClass(unittest.TestCase):
         """
 
         app.config["TESTING"] = True
-        app.config["LOGIN_DISABLED"] = True
-        app.login_manager.init_app(app)  # pylint: disable=no-member
         self.app = app.test_client()
 
     @classmethod
@@ -65,6 +63,7 @@ class TestsBaseClass(unittest.TestCase):
 
         self.truncate_db()
 
+    # pylint: disable=no-self-use
     def truncate_db(self):
         """
         Remove content from all tables.
