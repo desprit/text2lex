@@ -10,7 +10,11 @@ API_SECRET = "c2bf3686-a81e-496b-b75e-7ae79f9fa311"
 
 API_PORT = os.environ.get("API_PORT", 3031)
 ALLOWED_EXTENSIONS = set(["txt"])
-UPLOAD_FOLDER = "/tmp"
+UPLOAD_FOLDER = "/data/text2lex/upload"
+
+# RQ settings
+RQ_NLP_QUEUE_LOW = "nlp-low"
+RQ_NLP_QUEUE_HIGH = "nlp-high"
 
 # PostgreSQL credentials
 POSTGRES_USER = os.environ.get("POSTGRES_USER", "text2lex")
@@ -21,21 +25,23 @@ POSTGRES_NAME = os.environ.get("POSTGRES_NAME", "text2lex")
 POSTGRES_NAME_TEST = os.environ.get("POSTGRES_NAME_TEST", "text2lex_test")
 
 # Redis settings
-REDIS_HOST = os.environ.get("REDIS_HOST", "text2lex_redis")
+REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
 REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
-REDIS_PASS = os.environ.get("REDIS_PASS")
+REDIS_PASS = os.environ.get("REDIS_PASS", "a6128548809a4ab19")
+RELICS_RESULT_TTL = 60 * 60  # 1 hour
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-API_SERVICE_ROOT = os.path.join(PROJECT_ROOT, "backend/api/src")
-NLP_SERVICE_ROOT = os.path.join(PROJECT_ROOT, "backend/nlp/src")
+API_SERVICE_ROOT = os.path.join(PROJECT_ROOT, "api/src")
+NLP_SERVICE_ROOT = os.path.join(PROJECT_ROOT, "nlp/src")
+NLP_ASSETS_FOLDER = f"{NLP_SERVICE_ROOT}/assets"
 
 # Logging
 logger = logging.getLogger("text2lex")
 logger.setLevel(logging.DEBUG)
 
 logging_path = os.environ.get("LOG_PATH", "/var/log/text2lex")
-debug_log = "{}/debug.log".format(logging_path)
-error_log = "{}/errors.log".format(logging_path)
+debug_log = "{}/out.log".format(logging_path)
+error_log = "{}/err.log".format(logging_path)
 
 fh = logging.FileHandler(debug_log)
 ch = logging.FileHandler(error_log)

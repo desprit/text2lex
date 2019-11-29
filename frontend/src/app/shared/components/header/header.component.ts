@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MenuItem } from 'primeng/components/common/menuitem';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { MenuItem } from "primeng/components/common/menuitem";
 
-import { AuthService } from 'app/modules/auth/auth.service';
+import { AuthService } from "app/modules/auth/auth.service";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.styl']
+  selector: "app-header",
+  templateUrl: "./header.component.html",
+  styleUrls: ["./header.component.styl"]
 })
 export class HeaderComponent implements OnInit {
   public menuItems: MenuItem[];
@@ -18,19 +18,24 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.navigationLinks = [
       {
-        link: 'upload',
-        icon: 'pi-cloud-upload',
-        label: 'Upload'
+        link: "upload",
+        icon: "pi-cloud-upload",
+        label: "Upload"
       },
       {
-        link: 'howto',
-        icon: 'pi-info',
-        label: 'How to'
+        link: "history",
+        icon: "pi-cloud-upload",
+        label: "History"
+      },
+      {
+        link: "howto",
+        icon: "pi-info",
+        label: "How to"
       }
     ];
     this.menuItems = [
       {
-        label: 'Logout',
+        label: "Logout",
         command: (e: Event) => this.onLogoutClick(),
         disabled: !this.authService.loggedIn
       }
@@ -42,7 +47,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public onLogoClick() {
-    this.router.navigate(['database']);
+    this.router.navigate(["database"]);
   }
 
   public onLinkClick(pathName: string) {

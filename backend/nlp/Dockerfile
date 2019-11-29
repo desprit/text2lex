@@ -1,20 +1,15 @@
-FROM python:3.7-alpine3.9
+FROM python:3.7-slim-buster
 
-RUN apk add --update \
-  bash \
-  gcc \
-  musl-dev \
-  postgresql-dev \
-  libxml2-dev \
-  libffi-dev \
-  libxslt-dev \
-  supervisor \
-  && rm /var/cache/apk/*
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends gcc supervisor libpq-dev python-dev \
+  && rm -rf /var/lib/apt/lists/* \
+  && apt-get purge -y --auto-remove
 
 RUN mkdir -p /opt/text2lex/nlp
 ADD requirements.txt /opt/text2lex/nlp
 WORKDIR /opt/text2lex/nlp
 RUN pip install -r requirements.txt
+RUN python -m spacy download en_core_web_sm
 ADD . /opt/text2lex/nlp
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf

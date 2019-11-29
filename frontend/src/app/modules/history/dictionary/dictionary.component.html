@@ -1,0 +1,47 @@
+<div class="dictionary">
+  <p-virtualScroller
+    class="relics"
+    [value]="historyService.relics$"
+    scrollHeight="500px"
+    [itemSize]="150"
+  >
+    <p-header>
+      <div class="ui-g">
+        <div class="ui-g-12">
+          Dictionary
+        </div>
+      </div>
+    </p-header>
+    <p-footer>
+      <div class="ui-g">
+        <div class="ui-g-6" fxLayoutAlign="flex-start center">
+          Total items: 76
+        </div>
+        <div class="actions ui-g-6" fxLayoutAlign="flex-end center">
+          Download as:
+          <button
+            pButton
+            type="button"
+            class="ui-button-secondary"
+            label="csv"
+            (click)="onDownloadClick('csv')"
+          ></button>
+          <button
+            pButton
+            type="button"
+            class="ui-button-secondary"
+            label="json"
+            (click)="onDownloadClick('json')"
+          ></button>
+        </div>
+      </div>
+    </p-footer>
+    <ng-template pTemplate="item" let-relic>
+      {{ relic.lemma }}
+      {{ relic.example }}
+      <div class="translations">
+        {{ relic.translations.text }}
+      </div>
+    </ng-template>
+  </p-virtualScroller>
+</div>

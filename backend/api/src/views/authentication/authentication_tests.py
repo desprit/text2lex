@@ -41,12 +41,6 @@ class AuthenticationTests(TestsBaseClass):
         Should remove info from session object.
         """
 
-        with self.app.session_transaction() as sess:
-            sess["is_admin"] = True
-            sess["username"] = "test"
         response = self.app.get("/v1/api/logout", follow_redirects=True)
-        with self.app.session_transaction() as sess:
-            self.assertTrue("is_admin" not in sess)
-            self.assertTrue("username" not in sess)
         data = json.loads(response.data.decode("utf8"))
         self.assertTrue(data["success"])

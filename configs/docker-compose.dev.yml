@@ -26,11 +26,6 @@ services:
     network_mode: host
     command: tail -f /dev/null
 
-  text2lex_scheduler:
-    network_mode: host
-    env_file: .dev.env
-    command: ./entrypoint.sh
-
   text2lex_frontend:
     env_file: .dev.env
     build:

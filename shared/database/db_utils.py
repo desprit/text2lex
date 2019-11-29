@@ -26,12 +26,22 @@ from shared.config import (
 )
 
 
-def get_redis_conn() -> StrictRedis:
+def get_redis_conn(db: int = 0) -> StrictRedis:
     """
     Return Redis connection.
     """
 
-    redis_conn = Redis(REDIS_HOST, REDIS_PORT, password=REDIS_PASS)
+    try:
+        from app import app
+
+        if app.config.get("TESTING"):
+            db = 1
+    except ModuleNotFoundError:
+        pass
+
+    redis_conn = Redis(
+        REDIS_HOST, REDIS_PORT, password=REDIS_PASS, db=db, decode_responses=True
+    )
 
     return redis_conn
 

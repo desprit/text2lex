@@ -20,15 +20,6 @@ services:
   text2lex_nlp:
     env_file: .prod.env
 
-  text2lex_scheduler:
-    env_file: .prod.env
-    command:
-      [
-        'sh',
-        '-c',
-        'rqscheduler --host $$REDIS_HOST --port $$REDIS_PORT --password $$REDIS_PASS --interval 30',
-      ]
-
   text2lex_frontend:
     env_file: .dev.env
     build:

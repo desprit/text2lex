@@ -2,7 +2,7 @@
 Authentication endpoints.
 """
 from flask_cors import cross_origin
-from flask import request, session, jsonify, Blueprint
+from flask import request, jsonify, Blueprint
 from werkzeug.security import check_password_hash
 
 from shared.database import models, db_utils
@@ -18,7 +18,7 @@ def login():
     Process user login.
     """
 
-    print("LOGIN")
+    # TODO: create token and save user details to Redis
 
     username = request.json.get("username")
     password = request.json.get("password")
@@ -33,9 +33,6 @@ def login():
             }
         )
 
-    session["is_admin"] = existing_user.is_admin
-    session["username"] = existing_user.username
-
     role = "admin" if existing_user.is_admin else "user"
     user = {"role": role, "authToken": "testToken"}
 
@@ -49,7 +46,6 @@ def logout():
     Logout user.
     """
 
-    session.pop("is_admin", None)
-    session.pop("username", None)
+    # TODO: remove user details from Redis for a given token
 
     return jsonify({"success": True})

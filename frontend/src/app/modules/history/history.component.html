@@ -1,0 +1,41 @@
+<div class="history ui-g">
+  <div class="ui-g-12">
+    <div class="ui-g-6 ui-g-offset-3">
+      <h1>Your translated documents</h1>
+    </div>
+  </div>
+  <div class="jobs ui-g-12">
+    <div
+      class="job ui-g-4"
+      *ngFor="let job of historyService.jobs$ | async"
+      [ngClass]="{
+        success: job.expired === false && job.success === true,
+        expired: job.expired,
+        'in-progress': job.inProgresss
+      }"
+      (click)="onJobClick(job)"
+    >
+      <p-card>
+        <p-header> </p-header>
+        <div class="body">
+          <p>
+            Status:
+            {{
+              job.inProgress
+                ? "in progress"
+                : job.expired
+                ? "expired"
+                : "completed"
+            }}
+          </p>
+          <p>
+            Date:
+            {{ job.timestamp * 1000 | date: "longDate" }}
+          </p>
+          <p>Number of relics: {{ job.nRelics }}</p>
+          <p>Text: {{ job.sample }}</p>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

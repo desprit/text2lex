@@ -36,6 +36,7 @@ class TestsBaseClass(unittest.TestCase):
         """
 
         cls.conn = db_utils.get_postgres_conn()
+        cls.redis_conn = db_utils.get_redis_conn(db=1)
         cls.session = db_utils.get_postgres_session(cls.conn)
         cls.mixer = Mixer(session=cls.session, commit=False)
         db_utils.init_db()
@@ -70,6 +71,7 @@ class TestsBaseClass(unittest.TestCase):
         """
 
         db_utils.truncate_db()
+        self.redis_conn.flushdb()
 
     def get_random_item(
         self, model: models.ProjectModel = None, no_fk: bool = True

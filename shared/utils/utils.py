@@ -1,6 +1,7 @@
 """
 Project shared utilities.
 """
+import json
 import datetime
 from typing import Dict, List, Tuple, Any
 
@@ -82,3 +83,29 @@ def is_allowed_file(filename: str) -> bool:
     """
 
     return "." in filename and filename.rsplit(".", 1)[1] in ALLOWED_EXTENSIONS
+
+
+def json_serial(obj):
+    """
+    JSON serializer for objects not serializable by default json code.
+    """
+
+    if isinstance(obj, datetime.date):
+        return obj.isoformat()
+
+    raise TypeError("Type {} not serializable".format(type(obj)))
+
+
+def mark_job_success(job_id: str, success: bool, redis_conn=None) -> Dict[str, Any]:
+    """
+    Save status of the current job to Redis.
+    """
+
+    if not redis_conn:
+        redis_conn = db_utils.get_redis_conn()
+    success = "1" if success else "0"
+    now = int(datetime.datetime.utcnow().strftime("%s"))
+    value = {"success": success, "timestamp": now}
+    redis_conn.hset("jobs:status", job_id, json.dumps(value))
+
+    return value

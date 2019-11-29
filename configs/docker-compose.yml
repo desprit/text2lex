@@ -23,9 +23,10 @@ services:
     volumes:
       - ../backend/api/src:/opt/text2lex/api/src
       - ../shared:/opt/text2lex/shared
+      - /data/text2lex/upload:/data/text2lex/upload
       - /var/log/text2lex/api:/var/log/text2lex
 
-  # NLTK with Redis RQ service that runs scheduled tasks
+  # Spacy with Redis RQ service that runs scheduled tasks
   text2lex_nlp:
     container_name: text2lex_nlp
     build:
@@ -36,17 +37,8 @@ services:
     volumes:
       - ../backend/nlp/src:/opt/text2lex/nlp/src
       - ../shared:/opt/text2lex/shared
+      - /data/text2lex/upload:/data/text2lex/upload
       - /var/log/text2lex/nlp:/var/log/text2lex
-
-  # RQ Scheduler daemon to delay and schedule tasks scrapes
-  text2lex_scheduler:
-    container_name: text2lex_scheduler
-    build:
-      context: ../rqscheduler
-      dockerfile: Dockerfile
-    depends_on:
-      - text2lex_redis
-      - text2lex_nlp
 
   # AngularJS UI
   text2lex_frontend:

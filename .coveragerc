@@ -8,6 +8,7 @@ omit=
   */__pycache__/*
   */__init__.py
   */config.py
+  */vocabulary.py
   */tests/*
   *_tests.py
 exclude_lines =

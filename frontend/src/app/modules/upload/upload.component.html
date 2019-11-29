@@ -1,4 +1,14 @@
 <div class="upload" fxLayout="column" fxLayoutAlign="center center">
+  <div class="text-input">
+    <textarea [(ngModel)]="inputText" rows="10" pInputTextarea></textarea>
+    <button
+      [disabled]="!inputText"
+      (click)="onProcessClick()"
+      pButton
+      type="button"
+      label="Process text"
+    ></button>
+  </div>
   <div
     ng2FileDrop
     [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"

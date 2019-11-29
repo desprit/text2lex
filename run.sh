@@ -85,8 +85,9 @@ status() {
 
 prepare() {
   if [ ! -f .env ]; then
-    echo -e "# This file is just to make IDE know about project structure\nPYTHONPATH=$PWD:$PWD:/backend/api:$PWD:backend/nlp:$PWD/venv/lib/python3.7/site-packages" >> .env
+    echo -e "# This file is just to make IDE know about project structure\nPYTHONPATH=$PWD:$PWD/backend/api/src:$PWD/backend/nlp/src:$PWD/venv/lib/python3.7/site-packages" >> .env
   fi
+  sudo mkdir -p /data/text2lex
   sudo mkdir -p /var/log/$PROJECT_NAME/api
   sudo mkdir -p /var/log/$PROJECT_NAME/nlp
   sudo mkdir -p /var/log/$PROJECT_NAME/frontend
@@ -99,9 +100,13 @@ prepare() {
   sudo touch /var/log/$PROJECT_NAME/frontend/nginx_out.log
   sudo touch /var/log/$PROJECT_NAME/frontend/nginx_err.log
   sudo chown -R root:$USER /var/log/$PROJECT_NAME
+  sudo chown -R root:$USER /data/text2lex
   sudo chmod 2775 /var/log/$PROJECT_NAME
+  sudo chmod 2775 /data/text2lex
   find /var/log/$PROJECT_NAME -type d -exec sudo chmod 2775 {} +
+  find /data/text2lex -type d -exec sudo chmod 2775 {} +
   find /var/log/$PROJECT_NAME -type f -exec sudo chmod 0664 {} +
+  find /data/text2lex -type f -exec sudo chmod 0664 {} +
 }
 
 dev() {
@@ -146,7 +151,7 @@ recreateDb() {
 
 test() {
   coverage erase
-  PYTHONPATH=$PYTHONPATH:/home/desprit/projects/text2lex/backend/api/src:/home/desprit/projects/text2lex coverage run -m unittest shared/tests/runner.py
+  PYTHONPATH=/home/desprit/projects/text2lex:/home/desprit/projects/text2lex/backend/api/src:/home/desprit/projects/text2lex/backend/nlp/src:/home/desprit/projects/text2lex/venv/lib/python3.7/site-packages coverage run -m unittest shared/tests/runner.py
   coverage html --rcfile .coveragerc -d htmlcov
 }
 
@@ -170,10 +175,10 @@ run_redis() {
   fi
 }
 run_api() {
-  docker exec -it "$PROJECT_NAME"_api /bin/bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec sh"
+  docker exec -it "$PROJECT_NAME"_api /bin/bash
 }
 run_nlp() {
-  docker exec -it "$PROJECT_NAME"_nlp /bin/bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec sh"
+  docker exec -it "$PROJECT_NAME"_nlp /bin/bash
 }
 run_frontend() {
   docker exec -it "$PROJECT_NAME"_frontend /bin/sh -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec sh"
@@ -181,10 +186,6 @@ run_frontend() {
 run_psql() {
   name=$(docker ps --filter "name="$PROJECT_NAME"_postgres" --format "{{.ID}}")
   docker exec -it $name /bin/bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec bash"
-}
-run_scheduler() {
-  name=$(docker ps --filter "name="$PROJECT_NAME"_scheduler" --format "{{.ID}}")
-  docker exec -it $name /bin/sh -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec sh"
 }
 
 
@@ -204,7 +205,6 @@ show_usage() {
   printf "  ${GREEN}postgres${NC} - connect to Postgres container;\n"
   printf "  ${GREEN}api${NC} - connect to API container;\n"
   printf "  ${GREEN}nlp${NC} - connect to NLP container;\n"
-  printf "  ${GREEN}scheduler${NC} - connect to RQ Scheduler container;\n"
   printf "  ${GREEN}frontend${NC} - connect to VueJS container;\n"
   echo ""
 }
@@ -224,7 +224,6 @@ elif [ $COMMAND = "prod" ]       ; then prepare && stop && prod
 elif [ $COMMAND = "status" ]     ; then status
 elif [ $COMMAND = "redis" ]      ; then run_redis $2 $3
 elif [ $COMMAND = "postgres" ]   ; then run_psql
-elif [ $COMMAND = "scheduler" ]  ; then run_scheduler
 elif [ $COMMAND = "api" ]        ; then run_api
 elif [ $COMMAND = "nlp" ]        ; then run_nlp
 elif [ $COMMAND = "frontend" ]   ; then run_frontend
